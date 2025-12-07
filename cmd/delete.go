@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -15,11 +16,18 @@ var deleteCmd = &cobra.Command{
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
 			fmt.Println("Invalid ID")
+			if verbose {
+				fmt.Println("Try ./task list or task list for more information")
+			}
 			return
 		}
 
 		for i, task := range tasks {
 			if task.ID == id {
+				if verbose {
+					fmt.Fprintf(os.Stderr, "Deleting task: %d\n", id)
+					defer fmt.Fprintf(os.Stderr, "Remaining tasks: %d\n", len(tasks))
+				}
 				tasks = append(tasks[:i], tasks[i+1:]...)
 				saveTasks()
 				fmt.Printf("Deleted task: %s\n", task.Title)
@@ -28,4 +36,8 @@ var deleteCmd = &cobra.Command{
 		}
 		fmt.Println("Task not found")
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(deleteCmd)
 }

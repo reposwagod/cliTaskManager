@@ -15,6 +15,7 @@ type Task struct {
 }
 
 var (
+	verbose  bool
 	home, _  = os.UserHomeDir()
 	tasks    []Task
 	taskFile = filepath.Join(home, "cliTaskManager", "tasks.json")
@@ -55,9 +56,5 @@ func Exec() {
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
-	rootCmd.AddCommand(addCmd)
-	rootCmd.AddCommand(listCmd)
-	rootCmd.AddCommand(completeCmd)
-	rootCmd.AddCommand(deleteCmd)
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Show detailed output")
 }

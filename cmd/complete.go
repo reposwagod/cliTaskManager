@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -15,11 +16,17 @@ var completeCmd = &cobra.Command{
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
 			fmt.Println("Invalid ID")
+			if verbose {
+				fmt.Println("Try ./task list or task list for more information")
+			}
 			return
 		}
 
 		for i := range tasks {
 			if tasks[i].ID == id {
+				if verbose {
+					fmt.Fprintf(os.Stderr, "Completing task ID: %d\n", id)
+				}
 				tasks[i].Completed = true
 				saveTasks()
 				fmt.Printf("Completed task: %s\n", tasks[i].Title)
@@ -28,4 +35,8 @@ var completeCmd = &cobra.Command{
 		}
 		fmt.Println("Task not found")
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(completeCmd)
 }
