@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var priority string
+
 var addCmd = &cobra.Command{
 	Use:   "add [task]",
 	Short: "Add a new task",
@@ -23,6 +25,7 @@ var addCmd = &cobra.Command{
 			ID:        len(tasks) + 1,
 			Title:     args[0],
 			Completed: false,
+			Priority:  priority,
 		}
 		tasks = append(tasks, task)
 		saveTasks()
@@ -31,5 +34,6 @@ var addCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.PersistentFlags().StringVarP(&priority, "priority", "p", "medium", "Add priority to your task")
 	rootCmd.AddCommand(addCmd)
 }
